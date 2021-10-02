@@ -21,6 +21,6 @@ jobs:
       run: |
         docker login -u $DOCKER_USER -p $DOCKER_PASS
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag ${{secrets.DOCKER_USER}}/${{secrets.DOCKER_IMAGE}}:$TAG
+      run: docker build . --file Dockerfile --tag ${{secrets.DOCKER_USER}}/${{secrets.DOCKER_IMAGE}}:${TAG}
     - name: Push to docker hub
-      run: docker push ${{secrets.DOCKER_USER}}/${{secrets.DOCKER_IMAGE}}:$TAG
+      run: docker push ${{secrets.DOCKER_USER}}/${{secrets.DOCKER_IMAGE}}:${TAG}
