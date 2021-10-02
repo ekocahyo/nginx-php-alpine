@@ -1,0 +1,44 @@
+server {
+    listen 80 default_server;
+    server_name _;
+
+    client_max_body_size ${CLIENT_MAX_BODY_SIZE};
+
+    sendfile off;
+
+    root   ${ROOT_DIR};
+
+    location / {
+        index index.php index.html;
+    }
+
+    error_page   500 502 503 504  /50x.html;
+    location = /50x.html {
+        root   ${ROOT_DIR};
+    }
+
+    location ~ \.php$ {
+        fastcgi_pass   127.0.0.1:9000;
+        fastcgi_index  index.php;
+        fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+        include        fastcgi_params;
+    }
+
+    location ~* \.(jpg|jpeg|gif|png|css|js|ico|xml)$ {
+        expires 5d;
+    }
+
+    location ~ /\. {
+        log_not_found off;
+        deny all;
+    }
+
+    location ~ ^/(fpm-status|fpm-ping)$ {
+        access_log off;
+        allow 127.0.0.1;
+        deny all;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        include fastcgi_params;
+        fastcgi_pass 127.0.0.1:9000;
+    }
+}
