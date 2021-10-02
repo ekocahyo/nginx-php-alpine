@@ -2,11 +2,17 @@ name: Docker Image CI
 
 on:
   push:
-    branches: [ master ]
-    tags: [ 7.4 ]
+    branches: 
+      - master
+      - 7.4
+    tags: 
+      - 7.4
   pull_request:
-    branches: [ master ]
-    tags: [ 7.4 ]
+    branches: 
+      - master
+      - 7.4
+    tags: 
+      - 7.4
 
 jobs:
 
@@ -16,9 +22,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Get the tag
-      id: get_tag
-      run: echo ::set-output name=tag::$(echo ${GITHUB_REF:10})
     - name: Login to docker hub
       env:
         DOCKER_USER: ${{secrets.DOCKER_USER}}
@@ -26,6 +29,6 @@ jobs:
       run: |
         docker login -u $DOCKER_USER -p $DOCKER_PASS
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag ${{secrets.DOCKER_USER}}/${{secrets.DOCKER_IMAGE}}:${{steps.get_tag.outputs.tag}}
+      run: docker build . --file Dockerfile --tag ${{secrets.DOCKER_USER}}/${{secrets.DOCKER_IMAGE}}:$(date +%s)
     - name: Push to docker hub
-      run: docker push ${{secrets.DOCKER_USER}}/${{secrets.DOCKER_IMAGE}}:${{steps.get_tag.outputs.tag}}
+      run: docker push ${{secrets.DOCKER_USER}}/${{secrets.DOCKER_IMAGE}}
